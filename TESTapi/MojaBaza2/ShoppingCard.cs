@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace TESTapi.MojaBaza2;
 
@@ -15,5 +16,6 @@ public partial class ShoppingCard
 
     public string OrderId { get; set; } = null!;
 
+    [JsonIgnore]
     public virtual Product Product { get; set; } = null!;
 }

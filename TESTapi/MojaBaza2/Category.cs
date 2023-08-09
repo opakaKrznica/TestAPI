@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace TESTapi.MojaBaza2;
 
@@ -13,7 +14,9 @@ public partial class Category
 
     public bool IsHidden { get; set; }
 
+
     public string? ImagePath { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }

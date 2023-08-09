@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace TESTapi.MojaBaza2;
 
@@ -19,7 +20,9 @@ public partial class Product
 
     public string? ImagePath { get; set; }
 
-    public virtual Category Category { get; set; } = null!;
+    [JsonIgnore]
+    public virtual Category? Category { get; set; } = null!;
 
-    public virtual ICollection<ShoppingCard> ShoppingCards { get; set; } = new List<ShoppingCard>();
+    [JsonIgnore]
+    public virtual ICollection<ShoppingCard>? ShoppingCards { get; set; } = new List<ShoppingCard>();
 }
