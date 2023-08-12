@@ -1,0 +1,77 @@
+﻿@page "/category/{id:int}/{categoryName}"
+@using TESTfrontEnd.Models;
+
+@inject HttpClient httpClient;
+@inject NavigationManager navManager;
+
+
+<h3>CategoryProduct</h3>
+<div>
+    ID: @category.Id
+
+    <h1>@category.CategoryName</h1>
+
+    <p>@category.CategoryDescription</p>
+
+    @foreach (var item in products)
+    {
+        <div>
+            @item.ProductName
+            <br>
+            @item.ProductPrice
+            <br>
+            @item.ProductDescription
+
+
+        </div>
+    }
+
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    [Parameter]
+    public string CategoryName { get; set; }
+
+    private Category category = new Category();
+    private List<Product> products = new List<Product>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        category = await GetCategory(Id);
+        products = await GetProducts(Id);
+        navManager.LocationChanged += LocationChanged;
+    }
+
+
+
+    public async Task<Category> GetCategory(int categoryId)
+    {
+        var result = await httpClient.GetAsync($"https://expertshopapi.azurewebsites.net/api/Categories/{Id}");
+        if (result.IsSuccessStatusCode)
+        {
+            category = await result.Content.ReadFromJsonAsync<Category>();
+        }
+
+        return category;
+    }
+
+    public async Task<List<Product>> GetProducts(int categoryId)
+    {
+        var proizvodresult = await httpClient.GetAsync($"https://expertshopapi.azurewebsites.net/api/Products/category-products/{Id}");
+        if (proizvodresult.IsSuccessStatusCode)
+        {
+            products = await proizvodresult.Content.ReadFromJsonAsync<List<Product>>();
+        }
+        return products;
+    }
+
+
+    async void LocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        category = await GetCategory(Id);
+        products = await GetProducts(Id);
+        StateHasChanged();
+    }
+}

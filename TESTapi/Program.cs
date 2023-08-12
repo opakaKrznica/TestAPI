@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using TESTapi.MojaBaza2;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,8 @@ builder.Services.AddDbContext<PonovoWebShopVjezbaContext>
 
 
 builder.Services.AddControllers();
+
+builder.Services.AddDirectoryBrowser();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -24,6 +27,20 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseStaticFiles();
+
+app.UseFileServer(
+    new FileServerOptions
+    {
+        FileProvider = new
+        PhysicalFileProvider(
+            Path.Combine(builder.Environment
+            .ContentRootPath, "WebShopPictures")),
+        RequestPath = "/WebShopPictures",
+        EnableDirectoryBrowsing = true
+    }
+    );
 
 app.UseHttpsRedirection();
 
